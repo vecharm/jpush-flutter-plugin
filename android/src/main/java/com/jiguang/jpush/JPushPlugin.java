@@ -141,6 +141,7 @@ public class JPushPlugin implements FlutterPlugin, MethodCallHandler {
 
         JPushInterface.init(context);            // 初始化 JPush
 
+
         String channel = (String) map.get("channel");
         JPushInterface.setChannel(context, channel);
 
@@ -343,7 +344,7 @@ public class JPushPlugin implements FlutterPlugin, MethodCallHandler {
         int isEnabled = JPushInterface.isNotificationEnabled(context);
         //1表示开启，0表示关闭，-1表示检测失败
         HashMap<String, Object> map = new HashMap();
-        map.put("isEnabled", isEnabled == 1 ? true : false);
+        map.put("isEnabled", isEnabled == 1);
 
         runMainThread(map, result, null);
     }

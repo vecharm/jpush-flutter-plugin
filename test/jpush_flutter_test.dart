@@ -7,8 +7,8 @@ import 'package:jpush_flutter/jpush_flutter.dart';
 
 
 void main() {
-  MockMethodChannel mockChannel;
-  JPush jpush;
+ late MockMethodChannel mockChannel;
+ late JPush jpush;
 
   setUp(() {
     mockChannel = new MockMethodChannel();
