@@ -478,11 +478,12 @@ static NSMutableArray<FlutterResult>* getRidResults;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     _completeLaunchNotification = launchOptions;
+
     if (launchOptions != nil) {
         _launchNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
         _launchNotification = [self jpushFormatAPNSDic:_launchNotification.copy];
     }
-    
+
     if ([launchOptions valueForKey:UIApplicationLaunchOptionsLocalNotificationKey]) {
         UILocalNotification *localNotification = [launchOptions valueForKey:UIApplicationLaunchOptionsLocalNotificationKey];
         NSMutableDictionary *localNotificationEvent = @{}.mutableCopy;
@@ -491,13 +492,21 @@ static NSMutableArray<FlutterResult>* getRidResults;
         localNotificationEvent[@"extras"] = localNotification.userInfo;
         localNotificationEvent[@"fireTime"] = [NSNumber numberWithLong:[localNotification.fireDate timeIntervalSince1970] * 1000];
         localNotificationEvent[@"soundName"] = [localNotification.soundName isEqualToString:UILocalNotificationDefaultSoundName] ? @"" : localNotification.soundName;
-        
+
         if (@available(iOS 8.2, *)) {
             localNotificationEvent[@"title"] = localNotification.alertTitle;
         }
         _launchNotification = localNotificationEvent;
     }
     //[self performSelector:@selector(addNotificationWithDateTrigger) withObject:nil afterDelay:2];
+   JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
+   entity.types = JPAuthorizationOptionAlert|JPAuthorizationOptionBadge|JPAuthorizationOptionSound|JPAuthorizationOptionProvidesAppNotificationSettings;
+   if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
+    // 可以添加自定义 categories
+    // NSSet<UNNotificationCategory *> *categories for iOS10 or later
+    // NSSet<UIUserNotificationCategory *> *categories for iOS8 and iOS9
+   }
+  [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
     return YES;
 }
 - (void)addNotificationWithDateTrigger {
